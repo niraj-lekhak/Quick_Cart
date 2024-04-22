@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth } from './firebase';
+
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'; 
 
 function Login() {
     const navigate = useNavigate();
@@ -12,9 +13,9 @@ function Login() {
         e.preventDefault();
 
         // some fancy firebase login shitttt
-
-        auth.signInWithEmailAndPassword(email,password)
-        .then(auth =>{
+        const authInstance = getAuth();
+        signInWithEmailAndPassword(authInstance,email,password)
+        .then(userCredential =>{
             navigate("/", { replace: true })
         })
         .catch(error => alert(error.message))
@@ -23,10 +24,11 @@ function Login() {
     const register = e =>{
         e.preventDefault();
         
-        auth.createUserWithEmailAndPassword(email, password)
-        .then((auth) => {
+        const authInstance = getAuth();
+        createUserWithEmailAndPassword(authInstance,email, password)
+        .then((userCredential) => {
             // it successfully created a new user with email and password
-            if(auth) {
+            if(userCredential) {
                 navigate("/", { replace: true })
             }
         })
